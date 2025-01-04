@@ -1,40 +1,41 @@
-from random import choice
-
+from random import choice as randchoice
 import pygame
 
 pygame.font.init()
 pygame.init()
 
+# Defining values and variables
 heads, tails = 0, 0
 bg_color = (151, 215, 255)
-# 48, 63, 159
 width = height = 800
 win = pygame.display.set_mode((width, height))
-coin_rect = pygame.Rect(400 - 250 / 2, 400 - 250 / 2, 250, 250)
+coin_rect = pygame.Rect(275, 275, 250, 250)
 coin_rect_side = pygame.Rect(0, 0, 250, 25)
 
 heads_img = pygame.transform.scale(pygame.image.load("headsSide.png"), (250, 250))
 tails_img = pygame.transform.scale(pygame.image.load("tailsSide.png"), (250, 250))
 
-clock = pygame.time.Clock()
-
+# Defining texts
 font = pygame.font.SysFont("ariel", 40)
 flip_text = font.render("F = Flip", 1, "black")
 heads_text = font.render(f"Heads: {heads}", 1, "black")
 tails_text = font.render(f"Tails: {tails}", 1, "black")
 
+# Significant variables
 can_flip = True
 choices = ["heads", "tails"]
 result = ""
 
-
 def flipped(flippable):
     global result, heads
     if not flippable:
-        result = choice(choices)
+        result = randchoice(choices)
         for i in range(0, 16):
+            # Begins animation loop
             win.fill(bg_color)
+            # Coin moves up
             if i <= 7:
+                # Flips coin to show face or side view
                 if i % 2 == 0:
                     coin_rect_side.center = coin_rect.center
                     coin_rect_side.y = coin_rect_side.y - 25
@@ -43,8 +44,10 @@ def flipped(flippable):
                     coin_rect.center = coin_rect_side.center
                     coin_rect.y = coin_rect.y - 25
                     pygame.draw.rect(win, bg_color, coin_rect)
-                    win.blit(choice([heads_img, tails_img]), coin_rect)
+                    win.blit(randchoice([heads_img, tails_img]), coin_rect)
+            # Coin moves down
             else:
+                # Also flips coin
                 if i % 2 == 0:
                     coin_rect_side.center = coin_rect.center
                     coin_rect_side.y = coin_rect_side.y + 25
@@ -53,7 +56,7 @@ def flipped(flippable):
                     coin_rect.center = coin_rect_side.center
                     coin_rect.y = coin_rect.y + 25
                     pygame.draw.rect(win, bg_color, coin_rect)
-                    win.blit(choice([heads_img, tails_img]), coin_rect)
+                    win.blit(randchoice([heads_img, tails_img]), coin_rect)
             pygame.time.delay(50)
             pygame.display.flip()
 
@@ -66,6 +69,7 @@ def stats():
 
 
 def draw():
+    # Renders elements onto screen
     global heads, tails
     win.fill(bg_color)
     stats()
@@ -81,8 +85,8 @@ def draw():
 
 run = True
 
+# Runs the game
 while run:
-    clock.tick(60)
     draw()
 
     for event in pygame.event.get():
